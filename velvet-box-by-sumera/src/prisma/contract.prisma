@@ -1,0 +1,69 @@
+// ----------------------------------------
+// 1. USER MODEL (Customers & Admins)
+// ----------------------------------------
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  orders Order[]
+}
+
+// ----------------------------------------
+// 2. CATEGORY MODEL (Jewelry, Perfumes, etc.)
+// ----------------------------------------
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+// ----------------------------------------
+// 3. PRODUCT MODEL (Boutique Items)
+// ----------------------------------------
+model Product {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  price       Float
+  stock       Int      @default(0)
+  
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
+
+// ----------------------------------------
+// 4. ORDER MODEL (Purchases)
+// ----------------------------------------
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  total     Float
+  status    OrderStatus @default(PENDING)
+
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @default(now())
+}
