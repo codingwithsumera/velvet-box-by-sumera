@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength, IsEnum } from 'class-validator';
-import { Role } from '../../auth/enums/role.enum.js';
+import { Role } from '../enums/role.enum.js';
 
-export class CreateUserDto {
+export class RegisterDto {
   @IsEmail({}, { message: 'Invalid email address' })
   @IsNotEmpty()
   email: string;
@@ -18,4 +18,14 @@ export class CreateUserDto {
   @IsEnum(Role)
   @IsOptional()
   role?: Role;
+}
+
+export class LoginDto {
+  @IsEmail({}, { message: 'Invalid email address' })
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }

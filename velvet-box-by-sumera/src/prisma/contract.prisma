@@ -41,8 +41,23 @@ model Product {
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
 
+  collectionId String?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
+}
+
+// ----------------------------------------
+// 5. COLLECTION MODEL (New Arrivals, Best Sellers, etc.)
+// ----------------------------------------
+model Collection {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
 }
 
 // ----------------------------------------

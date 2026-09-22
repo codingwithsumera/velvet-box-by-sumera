@@ -8,6 +8,10 @@
       "model": "Category",
       "namespace": "public"
     },
+    "collection": {
+      "model": "Collection",
+      "namespace": "public"
+    },
     "order": {
       "model": "Order",
       "namespace": "public"
@@ -122,6 +126,83 @@
               "table": "category"
             }
           },
+          "Collection": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "description": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "slug": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "products": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "collectionId"
+                  ]
+                },
+                "to": {
+                  "model": "Product",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "description": {
+                  "column": "description"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "slug": {
+                  "column": "slug"
+                }
+              },
+              "namespaceId": "public",
+              "table": "collection"
+            }
+          },
           "Order": {
             "fields": {
               "createdAt": {
@@ -225,6 +306,13 @@
                   "kind": "scalar"
                 }
               },
+              "collectionId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "createdAt": {
                 "nullable": false,
                 "type": {
@@ -291,12 +379,31 @@
                   "model": "Category",
                   "namespace": "public"
                 }
+              },
+              "collection": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "collectionId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Collection",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
               "fields": {
                 "categoryId": {
                   "column": "categoryId"
+                },
+                "collectionId": {
+                  "column": "collectionId"
                 },
                 "createdAt": {
                   "column": "createdAt"
@@ -473,6 +580,58 @@
                 }
               ]
             },
+            "collection": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "description": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "slug": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "name"
+                  ]
+                },
+                {
+                  "columns": [
+                    "slug"
+                  ]
+                }
+              ]
+            },
             "order": {
               "checks": [
                 {
@@ -573,6 +732,11 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "collectionId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "createdAt": {
                   "codecId": "pg/timestamptz-temporal@1",
                   "default": {
@@ -637,6 +801,22 @@
                     "namespaceId": "public",
                     "tableName": "category"
                   }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "collectionId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "product"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "collection"
+                  }
                 }
               ],
               "indexes": [
@@ -646,6 +826,14 @@
                   ],
                   "name": "product_categoryId_idx_15c304f2",
                   "prefix": "product_categoryId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "collectionId"
+                  ],
+                  "name": "product_collectionId_idx_b344fc1a",
+                  "prefix": "product_collectionId_idx",
                   "unique": false
                 }
               ],
@@ -759,10 +947,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "8d2633b379242a0fdbde842ff997c160a0965a909b3d198a7f05a1b10c402b9e"
+    "storageHash": "f0032d756e1069cb64207f7fca71d87dd10ce8c6c3ac1804a2befdfe70de61cb"
   },
   "execution": {
-    "executionHash": "88cfa3f57506369afd87437af0a53504a847e57a938abaa3e4db73150f325037",
+    "executionHash": "fb8b2aac10d3727686e36641e94db75d91fded565734edaf254ddbf0b5e6ac75",
     "mutations": {
       "defaults": [
         {
@@ -774,6 +962,17 @@
             "column": "id",
             "namespace": "public",
             "table": "category"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "collection"
           }
         },
         {
