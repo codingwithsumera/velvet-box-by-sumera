@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
+    "prisma:generate": "prisma generate",
     "build": "nest build",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -39,7 +40,8 @@
     "npx": "^10.2.2",
     "pg": "^8.23.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "temporal-polyfill": "^1.0.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^12.0.0",

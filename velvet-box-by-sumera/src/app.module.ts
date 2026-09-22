@@ -3,6 +3,12 @@ import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { CategoriesModule } from './categories/categories.module.js';
+import { ProductsModule } from './products/products.module.js';
+import { UsersModule } from './users/users.module.js';
+import { OrdersModule } from './orders/orders.module.js';
+import { PrismaModule } from './prisma/prisma.module.js';
+import { CategoriesController } from './categories/categories.controller.js';
+import { CategoriesService } from './categories/categories.service.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -15,9 +21,13 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       appSecret: 'YOUR_APP_SECRET',
       serviceId: 'velvet-box-by-sumera',
     }),
+    PrismaModule,
     CategoriesModule,
+    ProductsModule,
+    UsersModule,
+    OrdersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, CategoriesController],
+  providers: [AppService, CategoriesService],
 })
 export class AppModule {}
