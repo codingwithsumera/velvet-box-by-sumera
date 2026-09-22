@@ -12,7 +12,9 @@ export class CategoriesService {
   }
 
   async findAll() {
-    return this.prisma.category.all();
+    const categories = await this.prisma.Category.findMany();
+    console.log('gvjsgvycvusd');
+    return categories;
   }
 
   findOne(id: number) {
