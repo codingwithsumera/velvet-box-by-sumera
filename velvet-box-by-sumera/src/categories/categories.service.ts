@@ -12,20 +12,20 @@ export class CategoriesService {
   }
 
   async findAll() {
-    const categories = await this.prisma.Category.findMany();
-    console.log('gvjsgvycvusd');
-    return categories;
+    return this.prisma.category.all();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  findOne(id: string) {
+    return this.prisma.category.where({ id }).first();
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    return this.prisma.category.where({ id }).update({
+      ...updateCategoryDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  remove(id: string) {
+    return this.prisma.category.where({ id }).delete();
   }
 }

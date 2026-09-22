@@ -10,7 +10,6 @@ import {
 import { CategoriesService } from './categories.service.js';
 import { CreateCategoryDto } from './dto/create-category.dto.js';
 import { UpdateCategoryDto } from './dto/update-category.dto.js';
-import { Category } from './entities/category.entity.js';
 
 @Controller('categories')
 export class CategoriesController {
@@ -28,19 +27,20 @@ export class CategoriesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.categoriesService.findOne(+id);
+    return this.categoriesService.findOne(id);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
-    return this.categoriesService.update(+id, updateCategoryDto);
+  ): any {
+    return this.categoriesService.update(id, updateCategoryDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.categoriesService.remove(+id);
+    const deleted = this.categoriesService.remove(id);
+    return { message: `${id} is deleted!` };
   }
 }
